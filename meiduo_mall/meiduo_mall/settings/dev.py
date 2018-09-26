@@ -32,7 +32,7 @@ SECRET_KEY = 'g!$jm@!hw2ckiwraeqi-)u=4*#otrolbuqe880vyc(4(g1i1#+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['api.meiduo.site',"127.0.0.1"]
 
 
 # Application definition
@@ -44,12 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     # "users.apps.Usersconfig",
     'users.apps.UsersConfig',
-    # 'verifications.apps.VerificationsConfig',
+    'verifications.apps.VerificationsConfig',
 ]
 
 MIDDLEWARE = [
+    # 没进行其他请求时，必须先进行跨域请求，因此放到最上面
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -212,3 +215,14 @@ REST_FRAMEWORK = {
 # 使用django认证系统使用的模型类，直接指明应用和表
 # 名就可以以，不用指明models，django会自己去找
 AUTH_USER_MODEL = 'users.User'
+
+#配置白名单
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:8080',
+    'localhost:8080',
+    'www.meiduo.site:8080',
+    'www.api.meiduo.site:8080',
+    'api.meiduo.site'
+)
+CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
+

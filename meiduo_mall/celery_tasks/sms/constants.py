@@ -7,6 +7,5 @@ SMS_CODE_REDIS_EXPIRES = 300
 # 短信验证码的发送间隔
 SEND_SMS_CODE_INTERVAL = 60
 
-
 # 短信模板
 SMS_CODE_TEMP_ID = 1
