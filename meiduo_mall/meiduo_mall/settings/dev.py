@@ -224,7 +224,13 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     # token的有效期
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    # 重写jwt登录验证中的对象返回函数，给返回前段的数据添加了user属性
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'users.utils.jwt_response_payload_handler',
+
 }
+AUTHENTICATION_BACKENDS = [
+    'users.utils.UsernameMobileAuthBackend',
+]
 
 # 使用django认证系统使用的模型类，直接指明应用和表
 # 名就可以以，不用指明models，django会自己去找
