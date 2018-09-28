@@ -9,13 +9,14 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
+import datetime
 import os
 import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 # __file__ 指的是当前文件夹
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 首先要启动manage.py,manage.py需要找包，默认是在根目录下，保存了python解释器的导包路径，
@@ -208,8 +209,21 @@ LOGGING = {
 REST_FRAMEWORK = {
     # 异常处理
     'EXCEPTION_HANDLER': 'meiduo_mall.utils.exceptions.exception_handler',
+    # 认证机制
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # token认证机制
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        # 可以保存登录状态的认证机制
+        'rest_framework.authentication.SessionAuthentication',
+        #每次登录都要进行的认证机制
+        'rest_framework.authentication.BasicAuthentication',
+    ),
 
+}
 
+JWT_AUTH = {
+    # token的有效期
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
 }
 
 # 使用django认证系统使用的模型类，直接指明应用和表
@@ -221,8 +235,7 @@ CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:8080',
     'localhost:8080',
     'www.meiduo.site:8080',
-    'www.api.meiduo.site:8080',
-    'api.meiduo.site'
+    'api.meiduo.site:8000'
 )
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
