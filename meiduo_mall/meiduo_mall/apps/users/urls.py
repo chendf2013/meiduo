@@ -7,11 +7,13 @@ urlpatterns = [
     url(r'^users/$', views.UserRegister.as_view()),
     url(r'^usernames/(?P<username>.+)/count/$', views.UserNameCheck.as_view()),
     url(r'^mobiles/(?P<mobile>1[345789]\d{9})/count/$', views.MobileCheck.as_view()),
-    url(r'^authorizations/$', obtain_jwt_token, name='authorizations'), # 登录获取token 和user
+    # 登录获取token 和user
+    url(r'^authorizations/$', obtain_jwt_token, name='authorizations'),
+    #第一步找回密码 完成图片验证码验证并发起短息验证码发送请求
+    url(r'^accounts/(?P<account>\w{5,20})/sms/token/$', views.SMSCodeTokenView.as_view()),
+    # 第二步找回密码 发送手机验证码
+    url(r'^sms_codes/$', views.SMSCodeByTokenView.as_view()),
 
-    # /mobiles/17699243758/count/
 
-    # http://127.0.0.1:8000/users/(注册)
-    # this.host + this.username + '/count/'(重名)
-    # this.host+'/mobiles/'+ this.mobile + '/count/'(手机去重)
 ]
+

@@ -44,12 +44,15 @@ class SmsCodeSerializer(serializers.Serializer):
         except RedisError as ret:
             logger.error(ret)
 
-
         # 是否发送过短信标志
-        mobile = self.context["view"].kwargs["mobile"]
-        sms_flag = rediscn.get("send_flag_%s"%mobile)
+        # mobile = self.context["view"].kwargs["mobile"]
+        # 使用get 方法找参数加入找不到不会报错。
+        mobile = self.context["view"].kwargs.get("mobile")
+
+        if mobile:
+            sms_flag = rediscn.get("send_flag_%s"%mobile)
 
 
-        if sms_flag:
-            raise serializers.ValidationError("请求手机验证码过于频繁")
+            if sms_flag:
+                raise serializers.ValidationError("请求手机验证码过于频繁")
         return attrs

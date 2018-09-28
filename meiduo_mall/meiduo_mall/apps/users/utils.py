@@ -7,7 +7,7 @@ from users.models import User
 
 def jwt_response_payload_handler(token, user=None, request=None):
     """
-    自定义jwt认证成功返回数据
+    自定义jwt认证成功返回数据的方法，添加了user的信息（除了要传递token外）
     """
     return {
         'token': token,
