@@ -13,7 +13,11 @@ urlpatterns = [
     url(r'^accounts/(?P<account>\w{5,20})/sms/token/$', views.SMSCodeTokenView.as_view()),
     # 第二步找回密码 发送手机验证码
     url(r'^sms_codes/$', views.SMSCodeByTokenView.as_view()),
+    # 第三步找回密码 进行短信验证码校验
+    # url(r"^accounts/?P<acount>\w{5,20}/password/token/$",views.PasswordTokenView.as_view()),
+    url(r"^accounts/(?P<account>\w{5,20})/password/token/$",views.PasswordTokenView.as_view()),
+    # 第四步 找回密码 重置密码
+    url(r"^users/(?P<pk>\d+)/password/$", views.PasswordView.as_view()),
 
 
 ]
-
