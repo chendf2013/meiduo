@@ -75,13 +75,11 @@ class OAuthQQ(object):
         response = urlopen(url)
         # 先读取再解码
         response_data = response.read().decode()
-        print(response_data)
         # 返回的是json格式字符串
         try:
             # 返回的数据 callback( {"client_id":"YOUR_APPID","openid":"YOUR_OPENID"} )\n;
             data = re.match(r"^callback\( (.*) \);$", response_data).group(1)
             data = json.loads(data)
-            print(data)
         except Exception as ret:
             data = parse_qs(response_data)
             logger.error('code=%s msg=%s' % (data.get('code'), data.get('msg')))

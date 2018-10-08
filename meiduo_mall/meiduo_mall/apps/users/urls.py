@@ -18,6 +18,7 @@ urlpatterns = [
     url(r"^accounts/(?P<account>\w{5,20})/password/token/$",views.PasswordTokenView.as_view()),
     # 第四步 找回密码 重置密码
     url(r"^users/(?P<pk>\d+)/password/$", views.PasswordView.as_view()),
-
+    # 用户个人数据
+    url(r"^user/$", views.UserDetailView.as_view()),
 
 ]

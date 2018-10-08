@@ -101,7 +101,7 @@ class UserSerializer(ModelSerializer):
     # password 长短限制（8-20)，不能为空，不能是空字符串，write_only
     # mobile 是否是11为手机号码
     # 忘记了重写类和 模型 字段范围
-    class Met:
+    class Meta:
         model = User
         # 添加token字段
         fields = ('id', 'username', 'password', 'password2', 'sms_code', 'mobile', 'allow', 'token')
@@ -219,3 +219,14 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
         instance.set_password(validated_data['password'])
         instance.save()
         return instance
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    用户详细信息序列化器
+    """
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'mobile', 'email', 'email_active')
+
+
