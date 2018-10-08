@@ -20,5 +20,8 @@ urlpatterns = [
     url(r"^users/(?P<pk>\d+)/password/$", views.PasswordView.as_view()),
     # 用户个人数据
     url(r"^user/$", views.UserDetailView.as_view()),
-
+    # 用户邮箱验证与保存
+    url(r"^emails/$",views.EmailView.as_view()),
+    # 邮箱链接验证
+    url(r"^emails/verification/$",views.EmailVerifyView.as_view())
 ]

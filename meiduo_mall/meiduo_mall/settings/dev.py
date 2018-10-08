@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'verifications.apps.VerificationsConfig',
     'oauth.apps.OauthConfig',
+    'areas.apps.AreasConfig',
 ]
 
 MIDDLEWARE = [
@@ -261,4 +262,4 @@ EMAIL_HOST_USER = 'chendf2013@163.com'
 #在邮箱中设置的客户端授权密码
 EMAIL_HOST_PASSWORD = 'chendongfa123'
 #收件人看到的发件人
-EMAIL_FROM = 'loveyou_pretty@163.com'
+EMAIL_FROM = 'chendf2013@163.com'

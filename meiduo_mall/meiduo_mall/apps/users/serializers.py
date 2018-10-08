@@ -1,5 +1,6 @@
 import re
 
+from celery_tasks.email.tasks import send_verify_email
 from django_redis import get_redis_connection
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
@@ -18,47 +19,42 @@ class UserSerializer(ModelSerializer):
     # 重写保存方法
     """
     password2 = serializers.CharField(label='确认密码', required=True, allow_null=False, allow_blank=False, write_only=True)
-    sms_code = serializers.CharField(label="短信验证码",required=True,allow_null=False,allow_blank=False,write_only=True)
-    allow = serializers.CharField(label="同意协议",required=True,allow_null=False,allow_blank=False,write_only=True)
+    sms_code = serializers.CharField(label="短信验证码", required=True, allow_null=False, allow_blank=False, write_only=True)
+    allow = serializers.CharField(label="同意协议", required=True, allow_null=False, allow_blank=False, write_only=True)
     # 定义token字段
-    token = serializers.CharField(label="token值",read_only=True)
-
-
+    token = serializers.CharField(label="token值", read_only=True)
 
     def validate_mobile(self, value):
-        if not re.match(r"^1[345789]\d{9}$",value):
-        # 手机号码不正确
+        if not re.match(r"^1[345789]\d{9}$", value):
+            # 手机号码不正确
             raise serializers.ValidationError('手机号码格式不正确')
         return value
 
-
-    def validate_allow(self,value):
+    def validate_allow(self, value):
         if value != "true":
             # 同意不正确
             raise serializers.ValidationError('请同意协议内容')
         return value
 
-
-    def validate(self,data):
+    def validate(self, data):
         # password2 是否等于passwod
-        password=data["password"]
-        password2=data["password2"]
+        password = data["password"]
+        password2 = data["password2"]
         if password2 != password:
-        # 密码不正确报错
+            # 密码不正确报错
             raise serializers.ValidationError('两次密码不一致')
         # sms_code 是否等于在redis中保存的值(忘记了没有获取到验证码的情况)
-        mobile= data["mobile"]
+        mobile = data["mobile"]
         sms_code = data["sms_code"]
         redis_cnn = get_redis_connection('verify_codes')
         # real_sms_code = redis_cnn.get("sms_%s" % mobile)
         real_sms_code = redis_cnn.get("sms_%s" % mobile)
         if not real_sms_code:
             raise serializers.ValidationError('没有获取到验证码')
-        if real_sms_code.decode()!=sms_code:
-        # 短信验证码不正确报错
+        if real_sms_code.decode() != sms_code:
+            # 短信验证码不正确报错
             raise serializers.ValidationError('短信验证码错误')
         return data
-
 
         # mobile 是否是11为手机号码
         # mobile = str(mobile)
@@ -71,6 +67,7 @@ class UserSerializer(ModelSerializer):
         # if allow!="ture":
         #     # 同意不正确
         #     raise serializers.ValidationError('请同意协议内容')
+
     # def save(self,data):
     def create(self, validated_data):
         # 去掉不用保存的字段（password2,sms_code,allow）
@@ -151,7 +148,6 @@ class CheckSMSCodeSerializer(serializers.Serializer):
     """
     sms_code = serializers.CharField(min_length=6, max_length=6)
 
-
     # 额外验证短信验证码
     def validate_sms_code(self, value):
         # 获取user
@@ -178,8 +174,8 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
     """
     重置密码序列化器
     """
-    password2 = serializers.CharField(label='确认密码',  write_only=True)
-    access_token = serializers.CharField(label='操作token',  write_only=True)
+    password2 = serializers.CharField(label='确认密码', write_only=True)
+    access_token = serializers.CharField(label='操作token', write_only=True)
 
     class Meta:
         model = User
@@ -225,8 +221,29 @@ class UserDetailSerializer(serializers.ModelSerializer):
     """
     用户详细信息序列化器
     """
+
     class Meta:
         model = User
         fields = ('id', 'username', 'mobile', 'email', 'email_active')
 
 
+class EmailSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", 'email']
+        extra_kwargs = {
+            'email': {
+                "required": True
+            }
+        }
+
+    def update(self, instance, validated_data):
+        instance.email = validated_data['email']
+        instance.save()
+
+        # 生成激活链接
+        verify_url = instance.generate_email_verify_url()
+
+        # 发送验证邮件
+        send_verify_email.delay(instance.email, verify_url)
+        return instance
