@@ -16,8 +16,4 @@ class SubAreaSerializer(serializers.ModelSerializer):
         model = models.Area
         fields = ("id", "name", "subs")
 
-class DeliveryAddressSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model=User
-        fields = '__all__'
