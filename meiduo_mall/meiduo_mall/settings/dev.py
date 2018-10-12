@@ -229,6 +229,8 @@ REST_FRAMEWORK = {
         # 每次登录都要进行的认证机制
         'rest_framework.authentication.BasicAuthentication',
     ),
+    # 分页
+    'DEFAULT_PAGINATION_CLASS': 'meiduo_mall.utils.pagination.StandardResultsSetPagination',
 
 }
 
@@ -323,3 +325,4 @@ HAYSTACK_CONNECTIONS = {
 # 指定索引结构的时机（项目运行前手动创建，数据修改时）
 # 信号实时处理器
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+

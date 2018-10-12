@@ -4,7 +4,11 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 urlpatterns = [
+    # 获取热销商品
     url(r'^categories/(?P<category_id>\d+)/hotskus/$', views.HotSKUListView.as_view()),
+    # 获取商品列表
+    url(r'^categories/(?P<category_id>\d+)/skus/$', views.SKUListView.as_view()),
+
 ]
 
 router = DefaultRouter()
