@@ -12,12 +12,6 @@ class SKUSerializer(serializers.ModelSerializer):
         model = SKU
         fields = ('id', 'name', 'price', 'default_image_url', 'comments')
 
-
-
-
-
-
-
 from drf_haystack.serializers import HaystackSerializer
 
 class SKUIndexSerializer(HaystackSerializer):

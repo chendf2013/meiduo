@@ -24,7 +24,10 @@ urlpatterns = [
     # 用户邮箱验证与保存
     url(r"^emails/$",views.EmailView.as_view()),
     # 邮箱链接验证
-    url(r"^emails/verification/$",views.EmailVerifyView.as_view())
+    url(r"^emails/verification/$",views.EmailVerifyView.as_view()),
+    # 保存与获取浏览记录
+    url(r'^browse_histories/$',views.UserBrowsingHistoryView.as_view()),
+
 ]
 
 
