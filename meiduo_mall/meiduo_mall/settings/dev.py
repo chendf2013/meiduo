@@ -231,7 +231,6 @@ REST_FRAMEWORK = {
     ),
     # 分页
     'DEFAULT_PAGINATION_CLASS': 'meiduo_mall.utils.pagination.StandardResultsSetPagination',
-
 }
 
 JWT_AUTH = {

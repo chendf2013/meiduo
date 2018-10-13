@@ -12,4 +12,6 @@ urlpatterns = [
 ]
 
 router = DefaultRouter()
-router.register('skus/search', views.SKUSearchViewSet, base_name='skus_search')
+router.register('skus/search', views.SKUSearchViewSet, base_name='skus-search')
+
+urlpatterns += router.urls
