@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'oauth.apps.OauthConfig',
     'areas.apps.AreasConfig',
     'goods.apps.GoodsConfig',
-    'contents.apps.ContentsConfig'
+    'contents.apps.ContentsConfig',
+    'carts.apps.CartsConfig',
 
 ]
 
@@ -166,6 +167,13 @@ CACHES = {
     "history":{
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/3",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+    "cart":{
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/4",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -284,7 +292,7 @@ REST_FRAMEWORK_EXTENSIONS = {
 DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fastdfs.storage.FasfDFSStorage'
 
 # FastDFS
-FDFS_URL = 'http://192.168.153.136:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址
+FDFS_URL = 'http://192.168.153.137:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址
 FDFS_CLIENT_CONF = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
 
 # 富文本编辑器ckeditor配置
