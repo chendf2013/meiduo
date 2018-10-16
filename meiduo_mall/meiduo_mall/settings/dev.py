@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'goods.apps.GoodsConfig',
     'contents.apps.ContentsConfig',
     'carts.apps.CartsConfig',
+    'orders.apps.OrdersConfig'
 
 ]
 
@@ -100,8 +101,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'HOST': '127.0.0.1',  # 数据库主机
         'PORT': 3306,  # 数据库端口
-        'USER': 'meiduo',  # 数据库用户名
-        'PASSWORD': 'meiduo',  # 数据库用户密码
+        'USER': 'chendf',  # 数据库用户名
+        'PASSWORD': 'chendf',  # 数据库用户密码
         'NAME': 'meiduo_mall'  # 数据库名字
     }
 }
@@ -263,12 +264,16 @@ CORS_ORIGIN_WHITELIST = (
     'www.meiduo.site:8080',
     'api.meiduo.site:8000'
 )
+
+
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
 # QQ登录参数
 QQ_APP_ID = '101474184'
 QQ_APP_KEY = 'c6ce949e04e12ecc909ae6a8b09b637c'
 QQ_REDIRECT_URL = 'http://www.meiduo.site:8080/oauth_callback.html'
+
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.163.com'

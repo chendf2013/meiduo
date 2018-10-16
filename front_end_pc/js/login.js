@@ -46,6 +46,8 @@ var vm = new Vue({
                         password: this.password
                     }, {
                         responseType: 'json',
+                        withCredentials: true,
+
                     })
                     .then(response => {
                         console.log(response.data)

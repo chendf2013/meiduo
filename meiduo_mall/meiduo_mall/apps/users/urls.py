@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^usernames/(?P<username>.+)/count/$', views.UserNameCheck.as_view()),
     url(r'^mobiles/(?P<mobile>1[345789]\d{9})/count/$', views.MobileCheck.as_view()),
     # 登录获取token 和user
-    url(r'^authorizations/$', obtain_jwt_token, name='authorizations'),
+    # url(r'^authorizations/$', obtain_jwt_token, name='authorizations'),
     #第一步找回密码 完成图片验证码验证并发起短息验证码发送请求
     url(r'^accounts/(?P<account>\w{5,20})/sms/token/$', views.SMSCodeTokenView.as_view()),
     # 第二步找回密码 发送手机验证码

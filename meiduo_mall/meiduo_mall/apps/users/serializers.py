@@ -26,6 +26,49 @@ class UserSerializer(ModelSerializer):
     # 定义token字段
     token = serializers.CharField(label="token值", read_only=True)
 
+    class Meta:
+        model = User
+        # 添加token字段
+        fields = ('id', 'username', 'password', 'password2', 'sms_code', 'mobile', 'allow', 'token')
+
+        kwargs_extra = {
+            "id": {
+                "read_only": True
+            },
+            "username": {
+                "max_length": 20,
+                "min_length": 5,
+                "required": True,
+                "allow_null": False,
+                "allow_blank": False,
+                "error-messages": {
+                    # 用户名长度不符合要求
+                    'min_length': '仅允许5-20个字符的用户名',
+                    'max_length': '仅允许5-20个字符的用户名',
+                }
+            },
+            "password": {
+                "max_length": 20,
+                "min_length": 8,
+                "required": True,
+                "allow_null": False,
+                "allow_blank": False,
+                "write_only": True,
+                "erro-message": {
+                    # 密码长度不符合要求
+                    'min_length': '仅允许8-20个字符的密码',
+                    'max_length': '仅允许8-20个字符的密码',
+                }
+            },
+            # "mobile":{
+            #     "max_length": 11,
+            #     "min_length": 11,
+            #     "required": True,
+            #     "allow_null": False,
+            #     "allow_blank": False,
+            # }
+        }
+
     def validate_mobile(self, value):
         if not re.match(r"^1[345789]\d{9}$", value):
             # 手机号码不正确
@@ -100,48 +143,7 @@ class UserSerializer(ModelSerializer):
     # password 长短限制（8-20)，不能为空，不能是空字符串，write_only
     # mobile 是否是11为手机号码
     # 忘记了重写类和 模型 字段范围
-    class Meta:
-        model = User
-        # 添加token字段
-        fields = ('id', 'username', 'password', 'password2', 'sms_code', 'mobile', 'allow', 'token')
 
-        kwargs_extra = {
-            "id": {
-                "read_only": True
-            },
-            "username": {
-                "max_length": 20,
-                "min_length": 5,
-                "required": True,
-                "allow_null": False,
-                "allow_blank": False,
-                "error-messages": {
-                    # 用户名长度不符合要求
-                    'min_length': '仅允许5-20个字符的用户名',
-                    'max_length': '仅允许5-20个字符的用户名',
-                }
-            },
-            "password": {
-                "max_length": 20,
-                "min_length": 8,
-                "required": True,
-                "allow_null": False,
-                "allow_blank": False,
-                "write_only": True,
-                "erro-message": {
-                    # 密码长度不符合要求
-                    'min_length': '仅允许8-20个字符的密码',
-                    'max_length': '仅允许8-20个字符的密码',
-                }
-            },
-            # "mobile":{
-            #     "max_length": 11,
-            #     "min_length": 11,
-            #     "required": True,
-            #     "allow_null": False,
-            #     "allow_blank": False,
-            # }
-        }
 
 
 class CheckSMSCodeSerializer(serializers.Serializer):
