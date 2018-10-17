@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'goods.apps.GoodsConfig',
     'contents.apps.ContentsConfig',
     'carts.apps.CartsConfig',
-    'orders.apps.OrdersConfig'
+    'orders.apps.OrdersConfig',
+    'payment.apps.PaymentConfig'
 
 ]
 
@@ -337,4 +338,10 @@ HAYSTACK_CONNECTIONS = {
 # 指定索引结构的时机（项目运行前手动创建，数据修改时）
 # 信号实时处理器
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+
+# 支付宝
+ALIPAY_APPID = "2016092000558893"
+ALIPAY_GATEWAY_URL = "https://openapi.alipaydev.com/gateway.do"
+ALIPAY_DEBUG = True
 
