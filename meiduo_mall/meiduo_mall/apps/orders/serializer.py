@@ -37,6 +37,8 @@ class SaveOrderSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
+
+        # 注意事务性 和 隔离性
         """保存订单"""
         # 获取当前下单用户
         user = self.context['request'].user
@@ -80,32 +82,79 @@ class SaveOrderSerializer(serializers.ModelSerializer):
                 for sku_id in cart_selected:
                     cart[int(sku_id)] = int(cart_redis[sku_id])
 
-                sku_obj_list = SKU.objects.filter(id__in=cart.keys())
+                # sku_obj_list = SKU.objects.filter(id__in=cart.keys())
+                # # 遍历勾选要下单的商品数据，
+                # for sku in sku_obj_list:
+                #
+                #     # 判断商品库存是否充足
+                #     count = cart[sku.id]
+                #
+                #     if sku.stock < count:
+                #         # 事务回滚
+                #         transaction.savepoint_rollback(save_id)
+                #         raise serializers.ValidationError('商品库存不足')
+                #     # 减少商品的库存 SKU
+                #     sku.stock -= count
+                #     sku.sales += count
+                #     sku.save()
+                #
+                #     order.total_count += count
+                #     order.total_amount += (sku.price * count)
+                #
+                #     # 保存到OrderGoods
+                #     OrderGoods.objects.create(
+                #         order=order,
+                #         sku=sku,
+                #         count=count,
+                #         price=sku.price,
+                #     )
+                # # 更新订单的数量与金额信息
+                # order.save()
+                sku_id_list = cart.keys()
                 # 遍历勾选要下单的商品数据，
-                for sku in sku_obj_list:
+                for sku_id in sku_id_list:
+                    while True:
+                        sku = SKU.objects.get(id=sku_id)
 
-                    # 判断商品库存是否充足
-                    count = cart[sku.id]
+                        # 判断商品库存是否充足
+                        count = cart[sku.id]
+                        origin_stock = sku.stock
+                        print('origin_stock=%s' % origin_stock)
+                        origin_sales = sku.sales
 
-                    if sku.stock < count:
-                        # 事务回滚
-                        transaction.savepoint_rollback(save_id)
-                        raise serializers.ValidationError('商品库存不足')
-                    # 减少商品的库存 SKU
-                    sku.stock -= count
-                    sku.sales += count
-                    sku.save()
+                        if sku.stock < count:
+                            # 事务回滚
+                            transaction.savepoint_rollback(save_id)
+                            raise serializers.ValidationError('商品库存不足')
 
-                    order.total_count += count
-                    order.total_amount += (sku.price * count)
+                        # import time
+                        # time.sleep(5)
 
-                    # 保存到OrderGoods
-                    OrderGoods.objects.create(
-                        order=order,
-                        sku=sku,
-                        count=count,
-                        price=sku.price,
-                    )
+                        # 减少商品的库存 SKU
+                        # sku.stock -= count
+                        # sku.sales += count
+                        # sku.save()
+                        new_stock = origin_stock - count
+                        new_sales = origin_sales + count
+
+                        # 返回受影响的行数
+                        ret = SKU.objects.filter(id=sku.id, stock=origin_stock).update(stock=new_stock, sales=new_sales)
+                        if ret == 0:
+                            continue
+
+                        order.total_count += count
+                        order.total_amount += (sku.price * count)
+
+                        # 保存到OrderGoods
+                        OrderGoods.objects.create(
+                            order=order,
+                            sku=sku,
+                            count=count,
+                            price=sku.price,
+                        )
+
+                        break
+
                 # 更新订单的数量与金额信息
                 order.save()
             except serializers.ValidationError:
