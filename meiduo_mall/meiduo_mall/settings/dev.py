@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'xadmin',
+    'crispy_forms',
+    'reversion',
     'haystack',
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 富文本编辑器上传图片模块
@@ -105,6 +108,14 @@ DATABASES = {
         'USER': 'chendf',  # 数据库用户名
         'PASSWORD': 'chendf',  # 数据库用户密码
         'NAME': 'meiduo_mall'  # 数据库名字
+    },
+    'slave': {
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': '127.0.0.1',
+        'PORT': 8306,
+        'USER': 'root',
+        'PASSWORD': 'mysql',
+        'NAME': 'meiduo_mall'
     }
 }
 
@@ -298,7 +309,7 @@ REST_FRAMEWORK_EXTENSIONS = {
 DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fastdfs.storage.FasfDFSStorage'
 
 # FastDFS
-FDFS_URL = 'http://192.168.153.137:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址
+FDFS_URL = 'http://192.168.153.141:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址
 FDFS_CLIENT_CONF = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
 
 # 富文本编辑器ckeditor配置
@@ -345,3 +356,12 @@ ALIPAY_APPID = "2016092000558893"
 ALIPAY_GATEWAY_URL = "https://openapi.alipaydev.com/gateway.do"
 ALIPAY_DEBUG = True
 
+# 买家账号dmfpnw9862@sandbox.com
+# 登录密码111111
+# 支付密码111111
+
+# 配置读写分离
+DATABASE_ROUTERS = ['meiduo_mall.utils.db_router.MasterSlaveDBRouter']
+
+# 静态文件收集文件夹
+# STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'front_end_pc/static')
