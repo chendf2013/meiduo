@@ -1,0 +1,28 @@
+# 图片验证码的有效期, 单位秒
+IMAGE_CODE_REDIS_EXPIRES = 300
+
+# 短信验证码的有效期
+SMS_CODE_REDIS_EXPIRES = 300
+
+# 短信验证码的发送间隔
+SEND_SMS_CODE_INTERVAL = 60
+
+
+# 短信模板
+SMS_CODE_TEMP_ID = 1
+
+# token的有效期
+SEND_SMS_TOKEN_EXPIRES = 300
+
+
+SET_PASSWORD_TOKEN_EXPIRES = 300
+
+
+# 邮箱验证token有效期
+SET_EMAIL_TOKEN_EXPIRES = 60*60*24
+
+# 用户最多保存地址数量限制
+USER_ADDRESS_COUNTS_LIMIT=20
+
+# 浏览历史记录每次查询条数
+USER_BROWSING_HISTORY_COUNTS_LIMIT=5
